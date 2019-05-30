@@ -1,8 +1,9 @@
-
-Z3_LIB=/path/to/libz3
+Z3_DIR=../lib/z3
+Z3_LIB=$(Z3_DIR)/bin
+Z3_INCLUDE=$(Z3_DIR)/include
 
 CC=$(CXX)
-CFLAGS = -I. -Wall -O2 -std=c++11 -Wno-narrowing
+CFLAGS = -I. -I$(Z3_INCLUDE) -Wall -O2 -std=c++11 -Wno-narrowing
 CXXFLAGS = $(CFLAGS)
 LDFLAGS = -L$(Z3_LIB)
 LOADLIBES = -lz3
