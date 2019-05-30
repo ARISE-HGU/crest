@@ -1,7 +1,7 @@
 
-YICES_DIR=/home/hansolchoe/yices-1.0.40
-Z3_LIB=/home/hansolchoe/usr/lib
-Z3_INCLUDE=/home/hansolchoe/include
+YICES_DIR=/path/to/yices
+Z3_LIB=/path/to/z3_lib
+Z3_INCLUDE=/path/to/z3_include
 
 CC=$(CXX)
 CFLAGS = -I. -I$(YICES_DIR)/include -I$(Z3_INCLUDE) -Wall -O2 -std=c++11 -Wno-narrowing
