@@ -16,7 +16,6 @@
 #include <string.h>
 
 #include "base/symbolic_interpreter.h"
-#include "base/yices_solver.h"
 
 using std::make_pair;
 using std::swap;

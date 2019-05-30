@@ -41,7 +41,6 @@ class Search {
 
   virtual void Run() = 0;
 
-  void SetSolver(string& solver);
   void SetIsLoggingOption(bool is_logging_option);
   void SetLogFileName(string& log_file_name);
   
@@ -90,7 +89,6 @@ class Search {
  private:
   const string program_;
 
-  string solver_;
   bool is_logging_option_;
   string log_file_name_;
   /*

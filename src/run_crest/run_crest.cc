@@ -48,8 +48,6 @@ int main(int argc, char* argv[]) {
     string search_type = "";
     char *depth;
 
-    string solver = "z3";
-
     bool is_initial_input_option = false;
     bool is_resume_option = false;
     bool is_logging_option = false;
@@ -62,7 +60,7 @@ int main(int argc, char* argv[]) {
     gettimeofday(&tv, NULL);
     srand((tv.tv_sec * 1000000) + tv.tv_usec);
 
-    while((opt = getopt_long_only(argc, argv,"a:l:iy", long_options, &option_index)) != EOF) {
+    while((opt = getopt_long_only(argc, argv,"a:l:i", long_options, &option_index)) != EOF) {
         switch(opt) {
             case 0:
                 if (search_type != "") {
@@ -104,9 +102,6 @@ int main(int argc, char* argv[]) {
               } else {
                 depth = 0;
               }
-              break;
-            case 'y':
-              solver = "yices";
               break;
             default:
                 print_help();
@@ -152,7 +147,6 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Unknown search strategy: %s\n", search_type.c_str());
         return 1;
     }
-  strategy->SetSolver(solver);
   if(is_logging_option) {
     strategy->SetIsLoggingOption(is_logging_option);
     strategy->SetLogFileName(log_file_name);

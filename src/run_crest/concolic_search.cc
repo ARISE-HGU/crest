@@ -21,7 +21,6 @@
 #include <queue>
 #include <utility>
 
-#include "base/yices_solver.h"
 #include "base/z3_solver.h"
 #include "run_crest/concolic_search.h"
 
@@ -62,9 +61,6 @@ Search::Search(const string& program, int max_iterations)
   : program_(program), max_iters_(max_iterations), num_iters_(0) {
   begin_total_ = std::chrono::high_resolution_clock::now();
   start_time_ = time(NULL);
-
-  // solver is z3 by default
-  solver_ = "z3";
 
   is_logging_option_ = false;
   log_file_name_ = "";
@@ -148,9 +144,6 @@ Search::Search(const string& program, int max_iterations)
 
 Search::~Search() { }
 
-void Search::SetSolver(string& solver) {
-  solver_ = solver;
-}
 void Search::SetIsLoggingOption(bool is_logging_option) {
   is_logging_option_ = is_logging_option;
 }
@@ -352,11 +345,7 @@ bool Search::SolveAtBranch(const SymbolicExecution& ex,
   // fprintf(stderr, "Yices . . . ");
   auto start = std::chrono::high_resolution_clock::now();
   bool success;
-  if(!solver_.compare("z3")){
-	  success = Z3Solver::IncrementalSolve(ex.inputs(), ex.vars(), cs, &soln);
-	} else {
-    success = YicesSolver::IncrementalSolve(ex.inputs(), ex.vars(), cs, &soln);
-	}
+	success = Z3Solver::IncrementalSolve(ex.inputs(), ex.vars(), cs, &soln);
   // fprintf(stderr, "%d\n", success);
   auto end = std::chrono::high_resolution_clock::now();
   elapsed_time_solving_ += (end - start);
