@@ -16,6 +16,10 @@
 #include <fstream>
 #include <functional>
 #include <limits>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <queue>
@@ -187,17 +191,24 @@ void Search::WriteCoverageToFileOrDie(const string& file) {
 
 
 void Search::LaunchProgram(const vector<value_t>& inputs) {
+  char fname[64] ;
+
   WriteInputToFileOrDie("input", inputs);
 
-  /*
+  snprintf(fname, 64, "stderr.%d", num_iters_) ;
   pid_t pid = fork();
-  assert(pid != -1);
-
   if (!pid) {
-    system(program_.c_str());
-    exit(0);
+	int fd = open(fname, O_WRONLY | O_CREAT, 0644) ;
+	dup2(fd, 2) ;
+	close(fd) ;
+
+	execl(program_.c_str(), program_.c_str(), (char *) 0x0) ;
+    //system(program_.c_str());
   }
-  */
+  else {
+	  wait(0x0) ;
+  }
+  
   auto start = std::chrono::high_resolution_clock::now();
   system(program_.c_str());
   auto end = std::chrono::high_resolution_clock::now();
