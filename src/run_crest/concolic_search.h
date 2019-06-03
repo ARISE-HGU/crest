@@ -43,7 +43,7 @@ class Search {
 
   void SetIsLoggingOption(bool is_logging_option);
   void SetLogFileName(string& log_file_name);
-  
+
  protected:
   vector<branch_id_t> branches_;
   vector<branch_id_t> paired_branch_;
@@ -101,33 +101,27 @@ class Search {
   void LaunchProgram(const vector<value_t>& inputs);
 };
 
-typedef struct dfs_execution {
-  size_t pos;
-  int depth;
-} dfs_execution;
 
 class BoundedDepthFirstSearch : public Search {
  public:
   explicit BoundedDepthFirstSearch(const string& program,
-                   int max_iterations,
-                   int max_depth,
-                   bool is_resume_,
-                   string& stack_dir_path);
+				   int max_iterations,
+				   int max_depth,
+           bool is_reversed);
   virtual ~BoundedDepthFirstSearch();
 
   virtual void Run();
 
-  void save_execution(SymbolicExecution& ex, int index);
-  void load_execution(SymbolicExecution& ex, string& path, int index);
-
  private:
   int max_depth_;
-  bool is_resume_;
-  string stack_dir_path_;
-  void DFS(size_t pos, int depth, SymbolicExecution& prev_ex);
-  std::stack<dfs_execution> dfs_execution_input_stack_;
-  std::stack<dfs_execution> dfs_execution_output_stack_;
+
+  bool is_reversed_;
+
+  void PureDfs(size_t pos, int depth, SymbolicExecution& prev_ex);
+
+  void ReversedDfs(size_t pos, int depth, SymbolicExecution& prev_ex);
 };
+
 
 /*
 class OldDepthFirstSearch : public Search {
