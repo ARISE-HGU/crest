@@ -19,6 +19,7 @@ struct option long_options[] =
 {
     {"random", no_argument, 0, 0},
     {"random_input", no_argument, 0, 0},
+    {"pdfs", optional_argument, 0, 'p'},
     {"dfs", optional_argument, 0, 'd'},
     {"cfg", no_argument, 0, 0},
     {"cfg_baseline", no_argument, 0, 0},
@@ -34,7 +35,7 @@ void print_help() {
             "-<strategy> [strategy options]\n");
     fprintf(stderr,
             "Strategies include: "
-            "dfs, cfg, random, uniform_random, random_input \n");
+            "dfs, pdfs, cfg, random, uniform_random, random_input \n");
 }
 
 int main(int argc, char* argv[]) {
@@ -49,18 +50,17 @@ int main(int argc, char* argv[]) {
     char *depth;
 
     bool is_initial_input_option = false;
-    bool is_resume_option = false;
     bool is_logging_option = false;
+    bool is_reversed = false;
 
     string log_file_name = "";
-    string stack_dir_path = "";
 
     // Initialize the random number generator.
     struct timeval tv;
     gettimeofday(&tv, NULL);
     srand((tv.tv_sec * 1000000) + tv.tv_usec);
 
-    while((opt = getopt_long_only(argc, argv,"a:l:i", long_options, &option_index)) != EOF) {
+    while((opt = getopt_long_only(argc, argv,"l:i", long_options, &option_index)) != EOF) {
         switch(opt) {
             case 0:
                 if (search_type != "") {
@@ -72,15 +72,6 @@ int main(int argc, char* argv[]) {
             case 'i':
                 is_initial_input_option = true;
                 break;
-            case 'a':
-                is_resume_option = true;
-                if (optarg) {
-                    stack_dir_path = optarg;
-                } else {
-                  fprintf(stderr, "Must specify stack directory\n");
-                  return 1;
-                }
-                break;
             case 'l':
                 is_logging_option = true;
                 if (optarg) {
@@ -90,7 +81,9 @@ int main(int argc, char* argv[]) {
                     return 1;
                 }
                 break;
+            case 'p':
             case 'd':
+              is_reversed = (opt=='d');
               // see https://stackoverflow.com/questions/1052746/getopt-does-not-parse-optional-arguments-to-parameters
               search_type = "dfs";
               if (!optarg
@@ -127,9 +120,9 @@ int main(int argc, char* argv[]) {
         strategy = new crest::RandomInputSearch(prog, num_iters);
     } else if (search_type == "dfs") {
         if (depth) {
-            strategy = new crest::BoundedDepthFirstSearch(prog, num_iters, atoi(depth), is_resume_option, stack_dir_path );
+            strategy = new crest::BoundedDepthFirstSearch(prog, num_iters, atoi(depth), is_reversed);
         } else {
-            strategy = new crest::BoundedDepthFirstSearch(prog, num_iters, 1000000, is_resume_option, stack_dir_path);
+            strategy = new crest::BoundedDepthFirstSearch(prog, num_iters, 1000000, is_reversed);
         }
     } else if (search_type == "cfg") {
         strategy = new crest::CfgHeuristicSearch(prog, num_iters);

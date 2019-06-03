@@ -392,76 +392,30 @@ bool Search::CheckPrediction(const SymbolicExecution& old_ex,
 ////////////////////////////////////////////////////////////////////////
 
 BoundedDepthFirstSearch::BoundedDepthFirstSearch
-(const string& program, int max_iterations, int max_depth, bool is_resume, string& stack_dir_path)
-  : Search(program, max_iterations),
-    max_depth_(max_depth),
-    is_resume_(is_resume),
-    stack_dir_path_(stack_dir_path) {
-  }
+(const string& program, int max_iterations, int max_depth, bool is_reversed)
+  : Search(program, max_iterations), max_depth_(max_depth),is_reversed_(is_reversed) { }
 
 BoundedDepthFirstSearch::~BoundedDepthFirstSearch() { }
 
 void BoundedDepthFirstSearch::Run() {
+  // Initial execution (on empty/random inputs).
   SymbolicExecution ex;
-  vector<value_t> input;
-  size_t pos = 0;
-  int depth = max_depth_;
-
-  if(!is_resume_) {
-    // Initial execution (on empty/random inputs).
-    RunProgram(input, &ex);
-    UpdateCoverage(ex);
-    system("rm -rf stack");
-    system("mkdir stack");
+  RunProgram(vector<value_t>(), &ex);
+  UpdateCoverage(ex);
+  if(is_reversed_) {
+    ReversedDfs(0, max_depth_, ex);
   } else {
-    // resume option
-    // restore DFS stack
-    // TODO - Depth change
-    size_t number_of_executions = 0;
-    ifstream fin_stack(stack_dir_path_+"/dfs_execution");
-    fin_stack >> number_of_executions;
-    for(size_t index = 0 ; index < number_of_executions; index++) {
-      size_t pos;
-      int depth;
-      fin_stack >> pos >> depth;
-      dfs_execution de = {pos, depth};
-      dfs_execution_input_stack_.push(de);
-    }
-    fin_stack.close();
-
-    if(!dfs_execution_input_stack_.empty()) {
-      dfs_execution last = dfs_execution_input_stack_.top();
-      pos = last.pos;
-      depth = last.depth;
-      dfs_execution_input_stack_.pop();
-      load_execution(ex, stack_dir_path_, number_of_executions);
-    }
+    PureDfs(0, max_depth_, ex);
   }
-
-  DFS(pos, depth, ex);
-
-  std::ofstream fout_stack("stack/dfs_execution");
-  int index = 0;
-  fout_stack << dfs_execution_output_stack_.size() << std::endl;
-  while(!dfs_execution_output_stack_.empty()) {
-    dfs_execution de = dfs_execution_output_stack_.top();
-    dfs_execution_output_stack_.pop();
-    fout_stack << de.pos << " " << de.depth << std::endl;
-  }
-  fout_stack.close();
-  PrintElapsedTimes();
-  exit(1);
 }
 
-  /*
-void BoundedDepthFirstSearch::DFS(int depth, SymbolicExecution& prev_ex) {
+void BoundedDepthFirstSearch::PureDfs(size_t pos, int depth, SymbolicExecution& prev_ex) {
   SymbolicExecution cur_ex;
   vector<value_t> input;
 
   const SymbolicPath& path = prev_ex.path();
 
-  int last = min(max_depth_, static_cast<int>(path.constraints().size()) - 1);
-  for (int i = last; i >= depth; i--) {
+  for (size_t i = path.constraints().size()-1; (i < path.constraints().size()) && (i >= pos) && (depth > 0); i--) {
     // Solve constraints[0..i].
     if (!SolveAtBranch(prev_ex, i, &input)) {
       continue;
@@ -471,51 +425,6 @@ void BoundedDepthFirstSearch::DFS(int depth, SymbolicExecution& prev_ex) {
     RunProgram(input, &cur_ex);
     UpdateCoverage(cur_ex);
 
-    // Check for prediction failure.
-    size_t branch_idx = path.constraints_idx()[i];
-    if (!CheckPrediction(prev_ex, cur_ex, branch_idx)) {
-      fprintf(stderr, "Prediction failed!\n");
-      continue;
-    }
-
-    // Recurse.
-    DFS(i+1, cur_ex);
-  }
-}
-  */
-
-void BoundedDepthFirstSearch::DFS(size_t pos, int depth, SymbolicExecution& prev_ex) {
-  if(is_resume_ && !dfs_execution_input_stack_.empty()) {
-    dfs_execution de = dfs_execution_input_stack_.top();
-    load_execution(prev_ex, stack_dir_path_, dfs_execution_input_stack_.size());
-    dfs_execution_input_stack_.pop();
-    if(dfs_execution_input_stack_.empty()) {
-      system("rm -rf stack");
-      system("mkdir stack");
-    }
-    DFS(de.pos, de.depth, prev_ex);
-  }
-
-  SymbolicExecution cur_ex;
-  vector<value_t> input;
-
-  const SymbolicPath& path = prev_ex.path();
-
-  for (size_t i = pos; (i < path.constraints().size()) && (depth > 0); i++) {
-    if (num_iters_ >= max_iters_) {
-        dfs_execution de = {i, depth};
-        dfs_execution_output_stack_.push(de);
-        save_execution(prev_ex, dfs_execution_output_stack_.size());
-        return;
-    }
-    // Solve constraints[0..i].
-    if (!SolveAtBranch(prev_ex, i, &input)) {
-      continue;
-    }
-
-    // Run on those constraints.
-    RunProgram(input, &cur_ex);
-    UpdateCoverage(cur_ex);
     // Check for prediction failure.
     size_t branch_idx = path.constraints_idx()[i];
     if (!CheckPrediction(prev_ex, cur_ex, branch_idx)) {
@@ -525,34 +434,40 @@ void BoundedDepthFirstSearch::DFS(size_t pos, int depth, SymbolicExecution& prev
 
     // We successfully solved the branch, recurse.
     depth--;
-    DFS(i+1, depth, cur_ex);
+    PureDfs(i+1, depth, cur_ex);
   }
 }
 
-void BoundedDepthFirstSearch::save_execution(SymbolicExecution& ex, int index) {
-  std::stringstream ss;
-  ss << "stack/se"<< index;
-  string execution_file_name = ss.str();
-  // std::cout << execution_file_name <<std::endl;
-  string buff;
-  buff.reserve(1<<26);
-  ex.Serialize(&buff);
-  // std::cout << execution_file_name.c_str() << std::endl;
-  std::ofstream out(execution_file_name.c_str(), std::ios::out | std::ios::binary);
-  out.write(buff.data(), buff.size());
-  assert(!out.fail());
-  out.close();
+
+void BoundedDepthFirstSearch::ReversedDfs(size_t pos, int depth, SymbolicExecution& prev_ex) {
+  SymbolicExecution cur_ex;
+  vector<value_t> input;
+
+  const SymbolicPath& path = prev_ex.path();
+
+  for (size_t i = pos; (i < path.constraints().size()) && (depth > 0); i++) {
+    // Solve constraints[0..i].
+    if (!SolveAtBranch(prev_ex, i, &input)) {
+      continue;
+    }
+
+    // Run on those constraints.
+    RunProgram(input, &cur_ex);
+    UpdateCoverage(cur_ex);
+
+    // Check for prediction failure.
+    size_t branch_idx = path.constraints_idx()[i];
+    if (!CheckPrediction(prev_ex, cur_ex, branch_idx)) {
+      fprintf(stderr, "Prediction failed!\n");
+      continue;
+    }
+
+    // We successfully solved the branch, recurse.
+    depth--;
+    ReversedDfs(i+1, depth, cur_ex);
+  }
 }
 
-void BoundedDepthFirstSearch::load_execution(SymbolicExecution& ex, string& path, int index) {
-  std::stringstream ss;
-  ss << path << "/se"<< index;
-  string execution_file_name = ss.str();
-  // std::cout << execution_file_name << std::endl;
-  ifstream in(execution_file_name.c_str(), ios::in | ios::binary);
-  assert(in && ex.Parse(in));
-  in.close();
-}
 ////////////////////////////////////////////////////////////////////////
 //// RandomInputSearch /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
