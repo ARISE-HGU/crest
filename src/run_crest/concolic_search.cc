@@ -191,16 +191,22 @@ void Search::WriteCoverageToFileOrDie(const string& file) {
 
 
 void Search::LaunchProgram(const vector<value_t>& inputs) {
-  char fname[64] ;
+  char fout[128] ;
+  char ferr[128]; 
 
   WriteInputToFileOrDie("input", inputs);
 
-  snprintf(fname, 64, "stderr.%d", num_iters_) ;
+  snprintf(fout, 128, "stdout.%d", num_iters_) ;
+  snprintf(ferr, 128, "stderr.%d", num_iters_) ;
+
   pid_t pid = fork();
   if (!pid) {
-	int fd = open(fname, O_WRONLY | O_CREAT, 0644) ;
-	dup2(fd, 2) ;
-	close(fd) ;
+	int fdout = open(fout, O_WRONLY | O_CREAT, 0644) ;
+	int fderr = open(ferr, O_WRONLY | O_CREAT, 0644) ;
+	dup2(fdout, 1) ;
+	dup2(fderr, 2) ;
+	close(fdout) ;
+	close(fderr) ;
 
 	execl(program_.c_str(), program_.c_str(), (char *) 0x0) ;
     //system(program_.c_str());

@@ -323,24 +323,24 @@ int main() {
 		printf("3. Searching\t4. Traversal\n");
 		printf("5. Exit\nEnter your choice:");
 		// scanf("%d", &ch);
-		CREST_int(ch);
+		CREST_int(ch); fprintf(stderr, "%d\n", ch) ;
 		switch (ch) {
 			case 1:
 				printf("Enter your input:");
 				// scanf("%d", &val);
-				CREST_int(val);
+				CREST_int(val); fprintf(stderr, "%d\n", val) ;
 				insertion(val);
 				break;
 			case 2:
 				printf("Enter the element to delete:");
 				// scanf("%d", &val);
-				CREST_int(val);
+				CREST_int(val); fprintf(stderr, "%d\n", val) ;
 				deletion(val, root);
 				break;
 			case 3:
 				printf("Enter the element to search:");
 				// scanf("%d", &val);
-				CREST_int(val);
+				CREST_int(val); fprintf(stderr, "%d\n", val) ;
 				searching(val, &ch, root);
 				break;
 			case 4:
