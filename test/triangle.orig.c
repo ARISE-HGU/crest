@@ -7,15 +7,14 @@ main()
 	int a, b, c ;
 	int match = 0 ;
 
-	scanf("%d", &a) ;
-	scanf("%d", &b) ;
-	scanf("%d", &c) ;
+	scanf("%d", &a) ; //CREST_int(a) ; fprintf(stderr, "%d\n", a) ;
+	scanf("%d", &b) ; //CREST_int(b) ; fprintf(stderr, "%d\n", b) ;
+	scanf("%d", &c) ; //CREST_int(c) ; fprintf(stderr, "%d\n", c) ;
 
 	if(a <= 0 || b<= 0 || c<= 0) 
 		exit(0);  
 
-    fprintf(stderr, "%d %d %d\n", a, b, c) ;
-
+    // printf("%d %d %d", a, b, c) ;
     //0: Equilateral, 1:Isosceles, 
 	// 2: Not a traiangle, 3:Scalene
 
