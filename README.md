@@ -79,7 +79,7 @@ Note that ```crestc``` does not produce the executable only, but also a suite of
 ```bin/run_crest``` runs concolic test generation on an instrumented executable program.
 The command line options of ```bin/run_crest``` are as follows:  
 
-``` run_crest <PROGRAM> <NUM_ITERATIONS> <STRATEGY> [STRATEGY OPTION] [-random_init] ```  
+<center> ``` run_crest <PROGRAM> <NUM_ITERATIONS> <STRATEGY> [STRATEGY OPTION] [-random_init] ```  </center>
 
 ```<PROGRAM>``` is a pathname of a target program executable compiled by ```crestc```.
 ```<NUM_ITER>``` gives the maximum number of concolic executions, which is the same as
