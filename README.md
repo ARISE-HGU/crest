@@ -12,7 +12,7 @@ the following points:
 
 Build CREST-MI
 =====
-
+CREST-MI can work with Ubuntu 14.04 and Ubuntu 16.04, currently.
 Please find the following instruction to download a constraint solver Z3, to build CIL,
 and to build CREST-MI in sequence.
 
