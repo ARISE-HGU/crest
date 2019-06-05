@@ -18,28 +18,27 @@ and to build CREST-MI in sequence.
 
 1. Clone this repository to your local
 
-''' $ git clone http://github.com/arise-handong/crest '''
+```	# git clone http://github.com/arise-handong/crest ```
 
 2. Download Z3-4.8.4 (or more recent version) to the 'lib' directory. For example of Ubuntu 16.04,
 
-''' $ wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.4/z3-4.8.4.d6df51951f4c-x64-ubuntu-16.04.zip  
-	$ unzip z3-4.8.4.d6df51951f4c-x64-ubuntu-16.04.zip  
-	$ ln -s z3-4.8.4.d6df51951f4c-x64-ubuntu-16.04 z3 '''
+``` # wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.4/z3-4.8.4.d6df51951f4c-x64-ubuntu-16.04.zip  
+	# unzip z3-4.8.4.d6df51951f4c-x64-ubuntu-16.04.zip  
+	# ln -s z3-4.8.4.d6df51951f4c-x64-ubuntu-16.04 z3 ```
 
 3. Build CIL
-'''
-    $ cd cil
-	$ ./configure
-	$ make 
-	$ cd .. '''
+
+``` # cd cil
+	# ./configure
+	# make 
+	# cd .. ```
 
 
 4. Build CREST and update PATH
-'''
-	$ cd src
-	$ make
-	$ PATH=$PATH:$(pwd)
-'''
+
+``` # cd src
+	# make
+	# PATH=$PATH:$(pwd) ```
 	
 
 Setup Target Program  
