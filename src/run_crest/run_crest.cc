@@ -33,7 +33,7 @@ void print_help() {
     fprintf(stderr,
             "Syntax: run_crest <program> "
             "<number of iterations> "
-            "-<strategy> [strategy options]\n");
+            "-<strategy> [strategy options] [-random_init]\n");
     fprintf(stderr,
             "Strategies include: "
             "dfs, pdfs, cfg, random, uniform_random, random_input \n");
