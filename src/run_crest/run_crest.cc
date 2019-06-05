@@ -20,7 +20,7 @@ struct option long_options[] =
     {"random", no_argument, 0, 0},
     {"random_input", no_argument, 0, 0},
     {"pdfs", optional_argument, 0, 'p'},
-    {"dfs", optional_argument, 0, 'd'},
+    {"rdfs", optional_argument, 0, 'd'},
     {"cfg", no_argument, 0, 0},
     {"cfg_baseline", no_argument, 0, 0},
     {"hybrid", no_argument, 0, 0},
@@ -36,7 +36,7 @@ void print_help() {
             "-<strategy> [strategy options] [-random_init]\n");
     fprintf(stderr,
             "Strategies include: "
-            "dfs, pdfs, cfg, random, uniform_random, random_input \n");
+            "rdfs, pdfs, cfg, random, uniform_random, random_input \n");
 }
 
 int main(int argc, char* argv[]) {
