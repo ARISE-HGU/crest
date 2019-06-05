@@ -1,26 +1,14 @@
-CREST
+CREST-MI: CREST with More User-friendly Interfaces
 =====
 
-CREST is a concolic test generation tool for C.
-
-Thanks for downloading and trying out CREST.
-
-You can get the latest version of CREST, as well as news and
-announcements at CREST's homepage: https://burn.im/crest .
-
-If you want to cite CREST, please refer to the (short) paper: Burnim,
-Sen, "Heuristics for Dynamic Test Generation", Proceedings of the 23rd
-IEEE/ACM International Conference on Automated Software Engineering
-(ASE), 2008.
-
-You can find a list of papers using CREST at
-https://burn.im/crest/#publications .
-
-NOTE: CREST is no longer being actively developed, but questions are
-still answered on the CREST-users mailing list --
-crest-users@googlegroups.com and
-https://groups.google.com/forum/#!forum/crest-users .
-
+CREST-MI is a variant of CREST a concolic test generation tool for C programs
+developed by Jacob Burnim (https://burn.im/crest). CREST-MI extends CREST to 
+provide more user interfaces useful for adopting concoilc test generation to 
+conventional C program testing. CREST-MI differs from the original CREST in
+the following points:
+  * CRETS-MI uses Z3 for constraint solving (instead of Yices 1.x)
+  * CREST-MI can define an initial value of a symbolic variable  
+  * CREST-MI can show the internal information of symbolic execution for testers to better understand the symbolic execution progress.
 
 Preparing a Program for CREST
 =====
