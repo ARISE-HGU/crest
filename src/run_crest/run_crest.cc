@@ -25,6 +25,7 @@ struct option long_options[] =
     {"cfg_baseline", no_argument, 0, 0},
     {"hybrid", no_argument, 0, 0},
     {"uniform_random", optional_argument, 0, 0},
+	{"random_init", no_argument, 0, 'r'},
     {0,0,0,0}
 };
 
@@ -52,6 +53,7 @@ int main(int argc, char* argv[]) {
     bool is_initial_input_option = false;
     bool is_logging_option = false;
     bool is_reversed = false;
+	bool is_random_init = false ;
 
     string log_file_name = "";
 
@@ -96,6 +98,11 @@ int main(int argc, char* argv[]) {
                 depth = 0;
               }
               break;
+			
+			case 'r':
+				is_random_init = true ;
+				break ;
+
             default:
                 print_help();
                 return 1;
@@ -110,6 +117,8 @@ int main(int argc, char* argv[]) {
     // Set environment variable to on/off initial input option
     const char *input_option_val = is_initial_input_option ? "true" : "false";
     setenv("CREST_INITIAL_INPUT", input_option_val, 1);
+	if (is_random_init)
+		setenv("CREST_RANDOM_INIT", "true", 1) ;
     string prog = argv[optind++];
     int num_iters = atoi(argv[optind++]);
 

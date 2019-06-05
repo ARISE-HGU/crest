@@ -317,13 +317,12 @@ value_t SymbolicInterpreter::NewInput(type_t type, addr_t addr, value_t value) {
   if (num_inputs_ < ex_.inputs().size()) {
     ret = ex_.inputs()[num_inputs_];
   } else {
-    // Generate a new random input.
-    // TODO: User a better pseudorandom number generator.
-    char *is_initial_input = getenv("CREST_INITIAL_INPUT");
+    
+	char *is_initial_input = getenv("CREST_RANDOM_INIT");
 	if(is_initial_input && !strcmp(is_initial_input,"true")) {
-	  ret = CastTo(value, type);
+	  ret = CastTo(rand(), type);
 	} else {
-      ret = CastTo(rand(), type);
+      ret = CastTo(value, type);
 	}
     ex_.mutable_inputs()->push_back(ret);
   }
