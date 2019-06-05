@@ -44,35 +44,58 @@ crest/src$ cd ../bin
 crest/bin$ PATH=$PATH:$(pwd) 
 ```
 
-Setup Target Program  
-========
-To use CREST on a C program, use functions CREST_int, CREST_char,
-etc., declared in "crest.h", to generate symbolic inputs for your
-program.  For examples, see the programs in test/.
-
-For simple, single-file programs, you can use the build script
-"bin/crestc" to instrument and compile your test program.
-
-CREST can be used to instrument multi-file programs, too --
-instructions may be added later.  In the meantime, you can take a look
-at an example, instrumented form of grep-2.2, available at
-https://github.com/jburnim/crest/tree/master/benchmarks/grep-2.2 .
-For further information, please see this
-[post](https://groups.google.com/forum/#!topic/crest-users/KwgP9JkajOw)
-on the CREST-users mailing list.
-
-
-Running Crest
+Run CREST
 =====
 
-CREST is run on an instrumented program as:
+A target program must declare one or more variables as symbolic variables.
+CREST-MI extracts a symbolic path condition over these symbolic varialbes 
+along a concret execution, and then generates a test input as a concrete value 
+assignments to these symbolic variables. To declare a variable ```x``` as 
+a symoblic variable, a target program must include ```<crest.h>``` and invoke
+```CREST_int(x)``` (or ```CREST_char(x)```) at the moment when x is defined by
+input.
 
-    bin/run_crest PROGRAM NUM_ITERATIONS -STRATEGY
+Once symbolic variables are declared, a target program must be built by
+```bin/crestc```. For instance, if ```target/prog.c``` is a target program,
+execute the following command:
 
-Possibly strategies include: dfs, cfg, random, uniform_random, random_input.
-Some strategies take optional parameters.
+```
+target$ crestc prog.c
+```
 
-Example commands to test the "test/uniform_test.c" program:
+```crestc``` is a script to produce an executable of a target program while inserting 
+additional code (i.e., instrumentation) for running dynamic symbolic analyses along 
+a program execution in background. For code insertion, ```crestc``` first invokes CIL 
+to run a source-code transformation scheme as programmed in ```lib/cil```.
+The source-code transformation inserts CREST API calls at every target program statement 
+depending on thier kinds in order to emit which operation is executed with which operands 
+(i.e., variables or memory locations) in a target program execution. 
+After source-code transformation, ```crestc``` invokes a C compiler (e.g., gcc) to build 
+the transformed target program to get an executable. 
+Note that ```crestc``` does not produce the executable only, but also a suite of data files 
+(as side-products) needed for CREST-MI to conduct symbolic analyses.
+
+
+```bin/run_crest``` runs concolic test generation on an instrumented executable program.
+The command line options of ```bin/run_crest``` are as follows:
+
+```
+run_crest <PROGRAM> <NUM_ITERATIONS> <STRATEGY> [STRATEGY OPTION] [-random_init]
+```
+
+```<PROGRAM>``` is a pathname of a target program executable compiled by ```crestc```.
+```<NUM_ITER>``` gives the maximum number of concolic executions, which is the same as
+the maximum number of test inputs to generate.
+```<STRATEGY>``` defines which search strategy will be used for concolic test generation.
+Currently, CREST-MI supports six search strategies: ```pdfs``` for DFS, ```rdfs``` for 
+Reverse DFS, ```random``` for Random Negation, ```uniform_random``` for Uniform Random,
+and ```cfg``` for Control-flow Graph-based heuristics. Depending on ```<STRATEGY>```,
+we may give an argument ```[STRATEGY OPTION]``` optionally. Finally, it is possible to
+configure CREST-MI to set the initial value of a symbolic variable at first execution
+as a random number by giving the ```-random_init``` option.
+
+For example of ```target/prog.c```, the following command will start CREST-MI to run
+concolic testing and generate test inputs.
 
     cd test
     ../bin/crestc uniform_test.c
@@ -98,10 +121,6 @@ around, some of which are temporary and some of which must be kept.
 In particular, "cfg_branches" and "branches" are output by the
 instrumentation process and are needed to run run_crest, and run_crest
 produces "coverage", a list of the ID's of all covered branches.
-
-
-Setup
-=====
 
 License
 =====
