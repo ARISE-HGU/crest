@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <crest.h>
+
 int
 main() 
 {
@@ -11,8 +12,10 @@ main()
 	CREST_int(b) ; fprintf(stderr, "%d\n", b) ;
 	CREST_int(c) ; fprintf(stderr, "%d\n", c) ;
 
-	if(a <= 0 || b<= 0 || c<= 0) 
+	if (a <= 0 || b<= 0 || c<= 0) {
+		printf("@L0\n") ;
 		exit(0);  
+	}
 
     // printf("%d %d %d", a, b, c) ;
     //0: Equilateral, 1:Isosceles, 
@@ -29,60 +32,60 @@ main()
 	if(match == 0) {
 		if(a + b <= c) {
 			result = 2 ;
-			printf("result=2 @L1\n") ;
+			printf("@L1\n") ;
 		}
 		else if (b + c <= a) {
 			result = 2 ;
-			printf("result=2 @L2)\n") ;
+			printf("@L2\n") ;
 		}
 		else if (a + c <= b) {
 			result = 2 ;
-			printf("result=2 @L3)\n") ;
+			printf("@L3\n") ;
 		}
 		else {
 			result = 3 ;
-			printf("result=3 @L4)\n") ;
+			printf("@L4\n") ;
 		}
 	} 
 	else {
 		if(match == 1) {
 			if(a + b <= c) {
 				result = 2 ;
-				printf("result=2 @L5)\n") ;
+				printf("@L5\n") ;
 			}
 			else {
 				result = 1 ;
-				printf("result=1 @L6)\n") ;
+				printf("@L6\n") ;
 			}
 		} 
 		else {
 			if (match == 2) {
 				if (a + c <= b) {
 					result = 2 ;
-					printf("result=2 @L7)\n") ;
+					printf("L7\n") ;
 				}
 				else {
 					result = 1 ;
-					printf("result=1 @L8)\n") ;
+					printf("L8\n") ;
             	}
 			} 
 			else {
 				if (match == 3) {
 					if(b + c <= a) {
 						result = 2 ;
-						printf("result=2 @L9)\n") ;
+						printf("@L9\n") ;
 					}
 					else {
 						result = 1 ;
-						printf("result=1 @L10)\n") ;
+						printf("@L10\n") ;
 					}
 				} 
 				else {
 					result = 0;
-					printf("result=0 @L11)\n") ;
+					printf("@L11\n") ;
 				}
 			}
 		}
 	}
-	printf("result=%d\n @L12",result);
+	printf("result=%d\n",result);
 }

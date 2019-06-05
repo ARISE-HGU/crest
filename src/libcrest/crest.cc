@@ -78,7 +78,7 @@ void __CrestAtExit() {
   // Write the execution out to file 'szd_execution'.
   string buff;
   buff.reserve(1<<26);
-  ex.Serialize(&buff);
+  ex.Serialize(&buff); 
   std::ofstream out("szd_execution", std::ios::out | std::ios::binary);
   out.write(buff.data(), buff.size());
   assert(!out.fail());
