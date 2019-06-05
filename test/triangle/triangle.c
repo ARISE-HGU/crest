@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <crest.h>
-
 int
 main() 
 {
