@@ -77,11 +77,9 @@ Note that ```crestc``` does not produce the executable only, but also a suite of
 
 
 ```bin/run_crest``` runs concolic test generation on an instrumented executable program.
-The command line options of ```bin/run_crest``` are as follows:
+The command line options of ```bin/run_crest``` are as follows:  
 
-```
-run_crest <PROGRAM> <NUM_ITERATIONS> <STRATEGY> [STRATEGY OPTION] [-random_init]
-```
+``` run_crest <PROGRAM> <NUM_ITERATIONS> <STRATEGY> [STRATEGY OPTION] [-random_init] ```  
 
 ```<PROGRAM>``` is a pathname of a target program executable compiled by ```crestc```.
 ```<NUM_ITER>``` gives the maximum number of concolic executions, which is the same as
@@ -94,39 +92,22 @@ we may give an argument ```[STRATEGY OPTION]``` optionally. Finally, it is possi
 configure CREST-MI to set the initial value of a symbolic variable at first execution
 as a random number by giving the ```-random_init``` option.
 
-For example of ```target/prog.c```, the following command will start CREST-MI to run
-concolic testing and generate test inputs.
+For example of ```target/prog.c```, the following command will start CREST-MI to generate
+test input with the DFS search strategy up to 1000 times.
 
-    cd test
-    ../bin/crestc uniform_test.c
-    ../bin/run_crest ./uniform_test 10 -dfs
+```
+target$ run_crest ./prog 1000 -pdfs
+```
 
-This should produce output roughly like:
-
-    ... [GARBAGE] ...
-    Read 8 branches.
-    Read 13 nodes.
-    Wrote 6 branch edges.
-
-    Iteration 0 (0s): covered 0 branches [0 reach funs, 0 reach branches].
-    Iteration 1 (0s): covered 1 branches [1 reach funs, 8 reach branches].
-    Iteration 2 (0s): covered 3 branches [1 reach funs, 8 reach branches].
-    Iteration 3 (0s): covered 5 branches [1 reach funs, 8 reach branches].
-    Iteration 4 (0s): covered 7 branches [1 reach funs, 8 reach branches].
-    GOAL!
-    Iteration 5 (0s): covered 8 branches [1 reach funs, 8 reach branches].
-
-NOTE: run_crest and crestc currently leave a lot of files lying
-around, some of which are temporary and some of which must be kept.
-In particular, "cfg_branches" and "branches" are output by the
-instrumentation process and are needed to run run_crest, and run_crest
-produces "coverage", a list of the ID's of all covered branches.
+The test execution results will be printed out to standard output. In addition, *i*-th
+test execution creates ```stdout.i``` and ```stderr.i``` which capture standard output
+and standard error produced by running the target program with i-th test input.
 
 License
 =====
 
-CREST is distributed under the revised BSD license.  See LICENSE for
-details.
+CREST-MI inherits the license of CREST. 
+CREST is distributed under the revised BSD license.  See LICENSE for details.
 
 This distribution includes a modified version of CIL, a tool for
 parsing, analyzing, and transforming C programs.  CIL is written by
