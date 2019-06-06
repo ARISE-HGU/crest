@@ -1,12 +1,12 @@
 CREST-MI: CREST with More User-friendly Interfaces
 =====
 
-CREST-MI is a variant of CREST a concolic test generation tool for C programs
-developed by Jacob Burnim (https://burn.im/crest). CREST-MI extends CREST to 
-provide more user interfaces useful for adopting concoilc test generation to 
-conventional C program testing. CREST-MI differs from the original CREST in
-the following points:
-  * CRETS-MI uses Z3 for constraint solving (instead of Yices 1.x)
+CREST-MI is a variant of CREST a concolic test generation tool for C programs,
+maintained by the ARISE lab in Handong University http://arise.handong.edu.
+CREST-MI is an extension of CREST originally developed by Jacob Burnim (https://burn.im/crest). 
+CREST-MI enriches user interfaces to make engineers easy to apply concolic test generation
+in their C program testing. Currently, CREST-MI extends CREST to the following points:
+  * CRETS-MI uses Z3 for constraint solving (replacing the Yices 1 solver)
   * CREST-MI can define an initial value of a symbolic variable  
   * CREST-MI can show the internal information of symbolic execution for testers to better understand the symbolic execution progress.
 
@@ -106,8 +106,7 @@ and standard error produced by running the target program with i-th test input.
 License
 =====
 
-CREST-MI inherits the license of CREST. 
-CREST is distributed under the revised BSD license.  See LICENSE for details.
+CREST-MI inherits the license of CREST. CREST is distributed under the revised BSD license.  See LICENSE for details.
 
 This distribution includes a modified version of CIL, a tool for
 parsing, analyzing, and transforming C programs.  CIL is written by
