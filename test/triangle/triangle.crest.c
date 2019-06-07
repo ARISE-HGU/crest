@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <crest.h>
 
 int
 main() 
@@ -9,9 +10,9 @@ main()
 
 	char * category[] = { "Equilateral", "Isosceles", "Not a triangle", "Scalene" } ;
 
-	scanf("%d", &a) ;
-	scanf("%d", &b) ;
-	scanf("%d", &c) ;
+	CREST_int(a) ; fprintf(stderr, "%d\n", a) ; /*scanf("%d", &a) ;*/
+	CREST_int(b) ; fprintf(stderr, "%d\n", b) ;	/*scanf("%d", &b) ;*/
+	CREST_int(c) ; fprintf(stderr, "%d\n", c) ;	/*scanf("%d", &c) ;*/
 
 	if (a <= 0 || b<= 0 || c<= 0) {
 		printf("@L0\n") ;
