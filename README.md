@@ -29,14 +29,22 @@ crest/lib$ unzip z3-4.8.4.d6df51951f4c-x64-ubuntu-16.04.zip
 crest/lib$ ln -s z3-4.8.4.d6df51951f4c-x64-ubuntu-16.04 z3
 ```
 
-3. Build ```cil```, a variant of [CIL](https://cil-project.github.io/cil/) for CREST
+3. Update LD_LIBRARY_PATH of `libz3.so`
+```
+$ cd crest/lib/z3/bin
+crest/lib/z3/bin$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)
+```
+
+4. Build ```cil```, a variant of [CIL](https://cil-project.github.io/cil/) for CREST
+
 ``` 
 $ cd crest/cil
 crest/cil$ ./configure
 crest/cil$ make 
 ```
 
-4. Build CREST and update PATH
+5. Build CREST and update PATH
+
 ``` 
 $ cd crest/src
 crest/src$ make
