@@ -112,7 +112,7 @@ bool Z3Solver::Solve(const map<var_t,type_t>& vars,
     snprintf(buff, sizeof(buff), "x%d", i->first);
     x_expr[i->first] = ctx.int_const(buff);
     expr e(ctx, x_expr[i->first]);
-    assert(e);
+    //assert(e);
     s.add(e >= kMinValue[i->second]);
     s.add(e <= kMaxValue[i->second]);
   }
