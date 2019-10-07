@@ -1,9 +1,18 @@
 Z3_DIR=../lib/z3
 Z3_LIB=$(Z3_DIR)/bin
 Z3_INCLUDE=$(Z3_DIR)/include
+OS := $(shell uname)
 
 CC=$(CXX)
+
+#If your Operating System is Mac(Darwin)
+ifeq ($(OS),Darwin)
+CFLAGS = -I. -I$(Z3_INCLUDE) -fpermissive -Wall -O2 -std=c++11 -Wno-narrowing
+#If Operating System is Linux
+else
 CFLAGS = -I. -I$(Z3_INCLUDE) -Wall -O2 -std=c++11 -Wno-narrowing
+endif
+
 CXXFLAGS = $(CFLAGS)
 LDFLAGS = -L$(Z3_LIB)
 LOADLIBES = -lz3
